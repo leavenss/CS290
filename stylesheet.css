@@ -9,3 +9,7 @@ div.inner-content{
   margin-right: auto;}
 input{
   margin-top: 20px;}
+div.forms{
+  border-width: 3px;
+  border-style: groove;
+}
