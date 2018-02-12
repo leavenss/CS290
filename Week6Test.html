@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      var apiKey = '03faf5fbd869b72a2d7fdeff3e9943a7';  //My Personal API Key
+      document.addEventListener('DOMContentLoaded', bindZipButton); //Have a listener for when the DOM is ready to have the button set for use
+      
+      function bindZipButton(){
+	  //Need a listener for when the submit button is clicked
+        document.getElementById('zipSubmit').addEventListener('click', function(event){
+			//Create a new request
+          var req = new XMLHttpRequest();
+		  //Combine the url using the zipcode that is entered and the above api key
+          var url = 'http://api.openweathermap.org/data/2.5/weather?zip=' + document.getElementById('zipcode').value + '&appid=' + apiKey;
+		  //We will use a GET to retrieve the desired information and it will be asynchronous
+          req.open('GET', url, true);
+		  //When the loading is done, prepare the response to be returned for the user to see
+          req.addEventListener('load', function(){
+             if(req.status >= 200 && req.status < 400){
+                 var response = JSON.parse(req.responseText);
+                 document.getElementById('currentCity').textContent = response.name;
+                 document.getElementById('temp').textContent = response.main.temp;
+                 document.getElementById('humidity').textContent = response.main.humidity;
+             } else {
+				//If there was an error, let the user know that was the case
+                 console.log("Error in network request: " + req.statusText);
+             }
+          });
+          req.send(null);
+          event.preventDefault();
+      });
+     } 
+    </script>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Weather by Zip Code</legend>
+        <label for="zipcode"></label>
+        <input type="text" name="zipcode" id="zipcode">
+        <input type="submit" id="zipSubmit">
+      </fieldset>
+    </form>
+    <div>
+      <h2>Weather Result</h2>
+      <ul>
+        <li><span>City: </span><span id="currentCity"></span></li>
+        <li><span>Current Temperature: </span><span id="temp"></span></li>
+        <li><span>Humidity: </span><span id="humidity"></span></li>
+      </ul>
+  </body>
+</html>
