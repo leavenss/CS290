@@ -4,6 +4,8 @@
     <script>
       var apiKey = '03faf5fbd869b72a2d7fdeff3e9943a7';  //My Personal API Key
       document.addEventListener('DOMContentLoaded', bindZipButton); //Have a listener for when the DOM is ready to have the button set for use
+	  document.addEventListener('DOMContentLoaded', bindCityButton);
+	  
       
       function bindZipButton(){
 	  //Need a listener for when the submit button is clicked
@@ -29,7 +31,34 @@
           req.send(null);
           event.preventDefault();
       });
-     } 
+     }
+
+		function bindCityButton(){
+			//Need a listener for when the submit button is clicked
+			document.getElementById('citySubmit').addEventListener('click', function(event){
+			//Create a new request
+			var req = new XMLHttpRequest();
+			//Create the correct url
+			var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + document.getElementById('city').value + '&appid=' + apiKey;
+			
+			req.open('GET', url, true);
+			req.addEventListener('load', function(){
+				if(req.status >= 200 && req.status < 400){
+					var response = JSON.parse(req.responseText);
+					document.getElementById('currentCity').textContent = response.name;
+					document.getElementById('temp').textContent = response.main.temp;
+					document.getElementById('humidity').textContent = response.main.humidity;
+				}else{
+					console.log("Error in loading: " + req.statusText);
+				}
+			});
+			req.send(null);
+			event.preventDefault();
+		});
+	}
+		
+			
+			
     </script>
   </head>
   <body>
@@ -40,6 +69,12 @@
         <input type="text" name="zipcode" id="zipcode">
         <input type="submit" id="zipSubmit">
       </fieldset>
+	  <fieldset>
+		<legend>Weather by City</legend>
+		<label for="city"></label>
+		<input type="text" name ="city" id="city">
+		<input type = "submit" id = "citySubmit">
+	</fieldset>
     </form>
     <div>
       <h2>Weather Result</h2>
